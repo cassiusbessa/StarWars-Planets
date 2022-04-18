@@ -5,15 +5,20 @@ import Content from './components/Content';
 
 function App() {
   const [planet, setPlanet] = useState([]);
+  const [filterByName, setFilterByName] = useState({ name: '' });
+  const [filteredPlanet, setFilteredPlanet] = useState([]);
   const handleFilterPlanets = ({ target: { value, name } }) => {
     const handleFilterPlanetTable = {
-      request: console.log('request'),
+      filterName: () => setFilterByName({ name: value }),
     };
+    console.log(name, value);
     handleFilterPlanetTable[name]();
   };
   const data = {
-    planet,
     handleFilterPlanets,
+    filterByName,
+    filteredPlanet,
+    planet,
   };
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -22,6 +27,12 @@ function App() {
     };
     fetchPlanets();
   }, []);
+
+  useEffect(() => {
+    const filtered = planet.filter(({ name }) => name.includes(filterByName.name));
+    setFilteredPlanet(filtered);
+  }, [filterByName, planet]);
+
   return (
     <planetContext.Provider value={ data }>
       <Content />
