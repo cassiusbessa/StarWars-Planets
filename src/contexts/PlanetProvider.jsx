@@ -4,27 +4,27 @@ import planetContext from './planetContext';
 import getPlanets from '../services';
 
 const PlanetProvider = ({ children }) => {
-  const [planets, setPlanets] = useState([]);
-  const handlePlanets = ({ target: { value, name } }) => {
-    const handlePlanetsTable = {
-      request: async () => setPlanets(await getPlanets()),
+  const [data, setData] = useState([]);
+  const handleFilterPlanets = ({ target: { value, name } }) => {
+    const handleFilterPlanetTable = {
+      request: async () => setData(await getPlanets()),
     };
-    handlePlanetsTable[name]();
+    handleFilterPlanetTable[name]();
   };
-  const data = {
-    planets,
-    handlePlanets,
+  const handlePlanets = {
+    data,
+    handleFilterPlanets,
   };
   useEffect(() => {
     const fetchPlanets = async () => {
-      const infoPlanets = await getPlanets();
-      setPlanets(infoPlanets);
+      const { results } = await getPlanets();
+      setData(results);
     };
     fetchPlanets();
   }, []);
 
   return (
-    <planetContext.Provider data={ data }>
+    <planetContext.Provider value={ handlePlanets }>
       {children}
     </planetContext.Provider>
   );
