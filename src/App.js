@@ -10,7 +10,11 @@ function App() {
   const [filterByNumericValues, setfilterByNumericValues] = useState(
     { column: 'population', comparison: 'maior que', value: 0 },
   );
-  const [filterArgument, setfilterArgument] = useState(0);
+  const [allNumbersFilters, setAllNumbersFilters] = useState([]);
+  const [filtredByArgumments, setfiltredByArgumments] = useState([]);
+  const [argummentColumn, setArgumentColumn] = useState([
+    'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
+  ]);
 
   const handleFilterPlanets = ({ target: { value, name } }) => {
     const handleFilterPlanetTable = {
@@ -18,8 +22,9 @@ function App() {
       filterColumn: () => setfilterByNumericValues({ ...filterByNumericValues,
         column: value }),
       filterNumber: () => setfilterByNumericValues({ ...filterByNumericValues, value }),
+      filterComparison: () => setfilterByNumericValues({ ...filterByNumericValues,
+        comparison: value }),
     };
-    console.log(name, value);
     handleFilterPlanetTable[name]();
   };
   const data = {
@@ -29,6 +34,11 @@ function App() {
     filteredPlanet,
     planet,
     filterByNumericValues,
+    filtredByArgumments,
+    argummentColumn,
+    setArgumentColumn,
+    allNumbersFilters,
+    setAllNumbersFilters,
   };
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -41,7 +51,19 @@ function App() {
   useEffect(() => {
     const filteredName = planet.filter(({ name }) => name.includes(filterByName.name));
     setFilteredPlanet(filteredName);
-  }, [filterByName, planet]);
+  }, [allNumbersFilters, filterByName, planet]);
+
+  useEffect(() => {
+    const toFilter = filteredPlanet;
+    if (toFilter.length > 0 && allNumbersFilters.length > 0) {
+      const argumments = allNumbersFilters.reduce((acc, curr) => {
+        const { column, comparison, value } = curr;
+        acc = [...filterAll(acc, comparison, column, value)];
+        return acc;
+      }, toFilter);
+      setfiltredByArgumments(argumments);
+    } else setfiltredByArgumments(toFilter);
+  }, [allNumbersFilters, filteredPlanet]);
 
   return (
     <planetContext.Provider value={ data }>

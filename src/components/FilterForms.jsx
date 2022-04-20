@@ -1,35 +1,44 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import planetContext from '../contexts/planetContext';
 
 function FilterForms() {
   const { filterName, handleFilterPlanets,
-    filterByNumericValues, setfilterByNumericValues } = useContext(planetContext);
+    filterByNumericValues, setfilterByNumericValues,
+    allNumbersFilters, setAllNumbersFilters,
+    argummentColumn, setArgumentColumn } = useContext(planetContext);
   const [argummentFilter, setArgumentFilter] = useState([]);
-  const [argummentColumn, setArgumentColumn] = useState([
-    'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
-  ]);
   const [disableFilter, setDisableFilter] = useState(false);
 
   const removeArgument = (argumment) => {
-    const argumments = argummentColumn.filter((column) => column !== argumment);
-    setArgumentColumn(argumments);
-    if (argumments.length === 0) {
+    setArgumentColumn(argummentColumn.filter((column) => column !== argumment));
+    if (argummentColumn.length === 0) {
       setDisableFilter(true);
     }
-    setfilterByNumericValues({
-      column: argumments[0], comparison: 'maior que', value: 0 });
   };
+
+  useEffect(() => {
+    setfilterByNumericValues({
+      column: argummentColumn[0], comparison: 'maior que', value: 0 });
+  }, [argummentColumn, setfilterByNumericValues]);
 
   const submitFilter = (e) => {
     e.preventDefault();
-    console.log('chamei');
-    console.log(filterByNumericValues);
     const argumment = Object.values(filterByNumericValues).reduce((acc, crr) => {
       acc = acc.concat(' ', crr);
       return acc;
     });
     removeArgument(filterByNumericValues.column);
     setArgumentFilter([...argummentFilter, argumment]);
+    setAllNumbersFilters([...allNumbersFilters, filterByNumericValues]);
+  };
+
+  const removeNumberFilter = ({ target: { id } }) => {
+    setAllNumbersFilters(allNumbersFilters.filter((e) => e.column !== id));
+    setArgumentColumn([...argummentColumn, id]);
+  };
+
+  const removeAllFilters = () => {
+    setAllNumbersFilters([]);
   };
 
   return (
@@ -89,16 +98,35 @@ function FilterForms() {
           Filtrar
         </button>
       </form>
-      { argummentFilter.length > 0 && (
+      { allNumbersFilters.length > 0 && (
         <>
           <h5>Filtros</h5>
           <ul>
-            { argummentFilter.map((arg) => (
-              <li key={ arg }>{ arg }</li>
+            { allNumbersFilters.map(({ column, comparison, value }) => (
+              <li
+                data-testid="filter"
+                key={ column }
+              >
+                { `${column} ${comparison} ${value}` }
+                <button
+                  id={ column }
+                  onClick={ removeNumberFilter }
+                  type="button"
+                >
+                  X
+                </button>
+              </li>
             )) }
           </ul>
         </>
       )}
+      <button
+        onClick={ removeAllFilters }
+        type="button"
+        data-testid="button-remove-filters"
+      >
+        Remover todas Filtragens
+      </button>
     </>
   );
 }

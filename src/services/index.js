@@ -5,6 +5,8 @@ export const getPlanets = async () => {
   return data;
 };
 
+/* const returnUnknown = (arg) => arg === 'unknown'; */
+
 export const filterAll = (array, signal, argumment, value) => {
   switch (signal) {
   case 'maior que':

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import planetContext from '../contexts/planetContext';
 
 function PlanetTable() {
-  const { filteredPlanet: planet } = useContext(planetContext);
+  const { filtredByArgumments: planet } = useContext(planetContext);
   const [planetsList, setPlanetsList] = useState([]);
   const [tableHead, setTableHead] = useState([]);
 
