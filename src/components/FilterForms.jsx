@@ -5,9 +5,10 @@ function FilterForms() {
   const { filterName, handleFilterPlanets,
     filterByNumericValues, setfilterByNumericValues,
     allNumbersFilters, setAllNumbersFilters,
-    argummentColumn, setArgumentColumn } = useContext(planetContext);
-  const [argummentFilter, setArgumentFilter] = useState([]);
+    argummentColumn, setArgumentColumn, order,
+    setFiltredByArgumments, filtredByArgumments } = useContext(planetContext);
   const [disableFilter, setDisableFilter] = useState(false);
+  const [argumments] = useState(argummentColumn);
 
   const removeArgument = (argumment) => {
     setArgumentColumn(argummentColumn.filter((column) => column !== argumment));
@@ -23,12 +24,7 @@ function FilterForms() {
 
   const submitFilter = (e) => {
     e.preventDefault();
-    const argumment = Object.values(filterByNumericValues).reduce((acc, crr) => {
-      acc = acc.concat(' ', crr);
-      return acc;
-    });
     removeArgument(filterByNumericValues.column);
-    setArgumentFilter([...argummentFilter, argumment]);
     setAllNumbersFilters([...allNumbersFilters, filterByNumericValues]);
   };
 
@@ -39,6 +35,32 @@ function FilterForms() {
 
   const removeAllFilters = () => {
     setAllNumbersFilters([]);
+  };
+
+  const handleOrder = (e) => {
+    e.preventDefault();
+    const { column, sort } = order;
+
+    if (sort === null) return;
+
+    const toOrder = [...filtredByArgumments];
+
+    const anao = toOrder.filter((b) => b[column] === 'unknown');
+    const sanao = toOrder.filter((a) => a[column] !== 'unknown');
+
+    console.log(anao);
+
+    sanao.sort((a, b) => {
+      if (sort === 'asc') {
+        if (a[column] === 'unknown') {
+          return b[column] - a[column];
+        }
+        return (+a[column]) - (+b[column]);
+      }
+      return b[column] - a[column];
+    });
+    const ordered = [...sanao, ...anao];
+    setFiltredByArgumments(ordered);
   };
 
   return (
@@ -127,6 +149,52 @@ function FilterForms() {
       >
         Remover todas Filtragens
       </button>
+      <form>
+        <label htmlFor="sort">
+          Ordenar por
+          <select
+            data-testid="column-sort"
+            id="sort"
+            name="inputSort"
+            onChange={ handleFilterPlanets }
+            value={ order.column }
+          >
+            {argumments.map((argumment) => (
+              <option key={ argumment } value={ argumment }>{argumment}</option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="asc">
+          Ascendente
+          <input
+            onChange={ handleFilterPlanets }
+            value="asc"
+            type="radio"
+            data-testid="column-sort-input-asc"
+            id="asc"
+            name="inputOrder"
+          />
+        </label>
+        <label htmlFor="desc">
+          Descendente
+          <input
+            onChange={ handleFilterPlanets }
+            value="desc"
+            type="radio"
+            data-testid="column-sort-input-desc"
+            id="desc"
+            name="inputOrder"
+          />
+        </label>
+        <button
+          onClick={ handleOrder }
+          type="submit"
+          data-testid="column-sort-button"
+        >
+          Ordenar
+
+        </button>
+      </form>
     </>
   );
 }

@@ -5,7 +5,7 @@ import getPlanets from '../services';
 
 const PlanetProvider = ({ children }) => {
   const [data, setData] = useState([]);
-  const handleFilterPlanets = ({ target: { value, name } }) => {
+  const handleFilterPlanets = ({ target: { name } }) => {
     const handleFilterPlanetTable = {
       request: async () => setData(await getPlanets()),
     };

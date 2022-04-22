@@ -7,6 +7,7 @@ function PlanetTable() {
   const [tableHead, setTableHead] = useState([]);
 
   useEffect(() => {
+    console.log('tabela');
     setPlanetsList(planet);
     if (planet.length > 0) {
       setTableHead(Object.keys(planet[0]).filter((key) => key !== 'residents'));
@@ -27,7 +28,7 @@ function PlanetTable() {
           <tbody>
             {planetsList.map((p) => (
               <tr key={ p.name }>
-                <td>{p.name}</td>
+                <td data-testid="planet-name">{p.name}</td>
                 <td>{p.rotation_period}</td>
                 <td>{p.orbital_period}</td>
                 <td>{p.diameter}</td>

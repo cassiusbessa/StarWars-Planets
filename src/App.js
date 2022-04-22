@@ -11,10 +11,11 @@ function App() {
     { column: 'population', comparison: 'maior que', value: 0 },
   );
   const [allNumbersFilters, setAllNumbersFilters] = useState([]);
-  const [filtredByArgumments, setfiltredByArgumments] = useState([]);
+  const [filtredByArgumments, setFiltredByArgumments] = useState([]);
   const [argummentColumn, setArgumentColumn] = useState([
     'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
   ]);
+  const [order, setOrder] = useState({ column: 'population', sort: null });
 
   const handleFilterPlanets = ({ target: { value, name } }) => {
     const handleFilterPlanetTable = {
@@ -24,6 +25,8 @@ function App() {
       filterNumber: () => setfilterByNumericValues({ ...filterByNumericValues, value }),
       filterComparison: () => setfilterByNumericValues({ ...filterByNumericValues,
         comparison: value }),
+      inputSort: () => setOrder({ ...order, column: value }),
+      inputOrder: () => setOrder({ ...order, sort: value }),
     };
     handleFilterPlanetTable[name]();
   };
@@ -31,18 +34,24 @@ function App() {
     handleFilterPlanets,
     setfilterByNumericValues,
     filterByName,
+    setFilteredPlanet,
     filteredPlanet,
     planet,
     filterByNumericValues,
+    setFiltredByArgumments,
     filtredByArgumments,
     argummentColumn,
     setArgumentColumn,
     allNumbersFilters,
     setAllNumbersFilters,
+    order,
   };
   useEffect(() => {
     const fetchPlanets = async () => {
       const { results } = await getPlanets();
+      console.log(results);
+      results.sort((a, b) => a.name.localeCompare(b.name));
+      console.log(results);
       setPlanet(results);
     };
     fetchPlanets();
@@ -51,9 +60,10 @@ function App() {
   useEffect(() => {
     const filteredName = planet.filter(({ name }) => name.includes(filterByName.name));
     setFilteredPlanet(filteredName);
-  }, [allNumbersFilters, filterByName, planet]);
+  }, [filterByName, planet]);
 
   useEffect(() => {
+    console.log('chamei');
     const toFilter = filteredPlanet;
     if (toFilter.length > 0 && allNumbersFilters.length > 0) {
       const argumments = allNumbersFilters.reduce((acc, curr) => {
@@ -61,8 +71,8 @@ function App() {
         acc = [...filterAll(acc, comparison, column, value)];
         return acc;
       }, toFilter);
-      setfiltredByArgumments(argumments);
-    } else setfiltredByArgumments(toFilter);
+      setFiltredByArgumments(argumments);
+    } else setFiltredByArgumments(toFilter);
   }, [allNumbersFilters, filteredPlanet]);
 
   return (
