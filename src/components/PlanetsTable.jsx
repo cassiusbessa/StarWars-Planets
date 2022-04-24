@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import planetContext from '../contexts/planetContext';
+import FilterForms from './FilterForms';
+import '../App.css';
 
 function PlanetTable() {
   const { filtredByArgumments: planet } = useContext(planetContext);
@@ -16,6 +18,7 @@ function PlanetTable() {
 
   return (
     <div>
+      <FilterForms />
       {planetsList.length > 0 && (
         <table>
           <thead>

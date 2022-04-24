@@ -1,14 +1,17 @@
 import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PlanetTable from './PlanetsTable';
-import FilterForms from './FilterForms';
+
+import Intro from './Intro';
 
 function Content() {
   return (
-    <>
-      <h1>Planetas</h1>
-      <FilterForms />
-      <PlanetTable />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={ <Intro /> } />
+        <Route path="/table" element={ <PlanetTable /> } />
+      </Routes>
+    </BrowserRouter>
   );
 }
 export default Content;
