@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import planetContext from '../contexts/planetContext';
 import FilterForms from './FilterForms';
 import '../App.css';
+import TablePage from '../style/TablePage';
 
 function PlanetTable() {
   const { filtredByArgumments: planet } = useContext(planetContext);
@@ -17,7 +18,8 @@ function PlanetTable() {
   }, [planet, planetsList]);
 
   return (
-    <div>
+    <TablePage>
+      <h1>Star Wars Planets</h1>
       <FilterForms />
       {planetsList.length > 0 && (
         <table>
@@ -40,16 +42,24 @@ function PlanetTable() {
                 <td>{p.terrain}</td>
                 <td>{p.surface_water}</td>
                 <td>{p.population}</td>
-                <td>{p.films}</td>
+                <td>
+                  {p.films.map((f, index) => (
+                    <span key={ index }>
+                      <a href={ f }>Link</a>
+                      <br />
+                    </span>
+                  ))}
+
+                </td>
                 <td>{p.created}</td>
                 <td>{p.edited}</td>
-                <td>{p.url}</td>
+                <td><a href={ p.url }>Link</a></td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
-    </div>
+    </TablePage>
 
   );
 }

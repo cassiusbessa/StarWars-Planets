@@ -64,138 +64,145 @@ function FilterForms() {
   };
 
   return (
-    <>
-      <input
-        data-testid="name-filter"
-        type="text"
-        name="filterName"
-        value={ filterName }
-        onChange={ handleFilterPlanets }
-      />
-      <form onSubmit={ submitFilter }>
-        <label htmlFor="column-filter">
-          Coluna
-          <select
-            value={ filterByNumericValues.column }
-            name="filterColumn"
-            onChange={ handleFilterPlanets }
-            data-testid="column-filter"
-            id="column-filter"
+    <div className="all-forms">
+      <label htmlFor="name-filter">
+        Pesquise por nome
+        <input
+          id="name-filter"
+          data-testid="name-filter"
+          type="text"
+          name="filterName"
+          value={ filterName }
+          onChange={ handleFilterPlanets }
+        />
+      </label>
+      <div className="numeric-filters">
+        <form onSubmit={ submitFilter }>
+          <label htmlFor="column-filter">
+            Coluna
+            <select
+              value={ filterByNumericValues.column }
+              name="filterColumn"
+              onChange={ handleFilterPlanets }
+              data-testid="column-filter"
+              id="column-filter"
+            >
+              {argummentColumn.map((column) => (
+                <option key={ column } value={ column }>{column}</option>
+              ))}
+            </select>
+          </label>
+          <label htmlFor="comparison-filter">
+            Operador
+            <select
+              value={ filterByNumericValues.comparison }
+              name="filterComparison"
+              onChange={ handleFilterPlanets }
+              data-testid="comparison-filter"
+              id="comparison-filter"
+            >
+              <option value="maior que">maior que</option>
+              <option value="menor que">menor que</option>
+              <option value="igual a">igual a</option>
+            </select>
+          </label>
+          <label htmlFor="value-filter">
+            Valor
+            <input
+              value={ filterByNumericValues.value }
+              name="filterNumber"
+              onChange={ handleFilterPlanets }
+              data-testid="value-filter"
+              type="number"
+              id="value-filter"
+            />
+          </label>
+          <button
+            disabled={ disableFilter }
+            data-testid="button-filter"
+            type="submit"
           >
-            {argummentColumn.map((column) => (
-              <option key={ column } value={ column }>{column}</option>
-            ))}
-          </select>
-        </label>
-        <label htmlFor="comparison-filter">
-          Operador
-          <select
-            value={ filterByNumericValues.comparison }
-            name="filterComparison"
-            onChange={ handleFilterPlanets }
-            data-testid="comparison-filter"
-            id="comparison-filter"
+            Filtrar
+          </button>
+          <button
+            onClick={ removeAllFilters }
+            type="button"
+            data-testid="button-remove-filters"
           >
-            <option value="maior que">maior que</option>
-            <option value="menor que">menor que</option>
-            <option value="igual a">igual a</option>
-          </select>
-        </label>
-        <label htmlFor="value-filter">
-          Valor
-          <input
-            value={ filterByNumericValues.value }
-            name="filterNumber"
-            onChange={ handleFilterPlanets }
-            data-testid="value-filter"
-            type="number"
-            id="value-filter"
-          />
-        </label>
-        <button
-          disabled={ disableFilter }
-          data-testid="button-filter"
-          type="submit"
-        >
-          Filtrar
-        </button>
-      </form>
-      { allNumbersFilters.length > 0 && (
-        <>
-          <h5>Filtros</h5>
-          <ul>
-            { allNumbersFilters.map(({ column, comparison, value }) => (
-              <li
-                data-testid="filter"
-                key={ column }
-              >
-                { `${column} ${comparison} ${value}` }
-                <button
-                  id={ column }
-                  onClick={ removeNumberFilter }
-                  type="button"
+            Remover todas Filtragens
+          </button>
+        </form>
+        { allNumbersFilters.length > 0 && (
+          <>
+            <h5>Filtros</h5>
+            <ul>
+              { allNumbersFilters.map(({ column, comparison, value }) => (
+                <li
+                  data-testid="filter"
+                  key={ column }
                 >
-                  X
-                </button>
-              </li>
-            )) }
-          </ul>
-        </>
-      )}
-      <button
-        onClick={ removeAllFilters }
-        type="button"
-        data-testid="button-remove-filters"
-      >
-        Remover todas Filtragens
-      </button>
-      <form>
-        <label htmlFor="sort">
-          Ordenar por
-          <select
-            data-testid="column-sort"
-            id="sort"
-            name="inputSort"
-            onChange={ handleFilterPlanets }
-            value={ order.column }
-          >
-            {argumments.map((argumment) => (
-              <option key={ argumment } value={ argumment }>{argumment}</option>
-            ))}
-          </select>
-        </label>
-        <label htmlFor="asc">
-          Ascendente
-          <input
-            onChange={ handleFilterPlanets }
-            value="asc"
-            type="radio"
-            data-testid="column-sort-input-asc"
-            id="asc"
-            name="inputOrder"
-          />
-        </label>
-        <label htmlFor="desc">
-          Descendente
-          <input
-            onChange={ handleFilterPlanets }
-            value="desc"
-            type="radio"
-            data-testid="column-sort-input-desc"
-            id="desc"
-            name="inputOrder"
-          />
-        </label>
-        <button
-          onClick={ handleOrder }
-          type="submit"
-          data-testid="column-sort-button"
-        >
-          Ordenar
+                  { `${column} ${comparison} ${value}` }
+                  <button
+                    id={ column }
+                    onClick={ removeNumberFilter }
+                    type="button"
+                  >
+                    X
+                  </button>
+                </li>
+              )) }
+            </ul>
+          </>
+        )}
 
-        </button>
-      </form>
-    </>
+        <form>
+          <label htmlFor="sort">
+            Ordenar por
+            <select
+              data-testid="column-sort"
+              id="sort"
+              name="inputSort"
+              onChange={ handleFilterPlanets }
+              value={ order.column }
+            >
+              {argumments.map((argumment) => (
+                <option key={ argumment } value={ argumment }>{argumment}</option>
+              ))}
+            </select>
+          </label>
+          <label htmlFor="asc">
+            Ascendente
+            <input
+              onChange={ handleFilterPlanets }
+              value="asc"
+              type="radio"
+              data-testid="column-sort-input-asc"
+              id="asc"
+              name="inputOrder"
+            />
+          </label>
+          <label htmlFor="desc">
+            Descendente
+            <input
+              onChange={ handleFilterPlanets }
+              value="desc"
+              type="radio"
+              data-testid="column-sort-input-desc"
+              id="desc"
+              name="inputOrder"
+            />
+          </label>
+          <button
+            onClick={ handleOrder }
+            type="submit"
+            data-testid="column-sort-button"
+          >
+            Ordenar
+
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }
 

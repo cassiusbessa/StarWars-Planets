@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSound from 'use-sound';
+import IntroButton from '../style/IntroButton';
 import introStarWars from '../assets/audio/introStarWars.mp3';
+import babyYoda from '../assets/imgs/babyYoda2.jpg';
 
 const introTime = 40000;
 function Intro() {
@@ -29,13 +31,17 @@ function Intro() {
     <div>
 
       { !isPlaying ? (
-        <button
-          type="button"
-          onClick={ starPage }
-        >
-          Começar Aventura
+        <IntroButton>
+          <h1>Star Wars Planets</h1>
 
-        </button>
+          <button
+            type="button"
+            onClick={ starPage }
+          >
+            Clique Aqui para Começar Aventura
+            <img src={ babyYoda } alt="Baby Yoda" />
+          </button>
+        </IntroButton>
       ) : (
 
         <div className="intro-container">
